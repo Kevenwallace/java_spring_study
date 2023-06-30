@@ -12,6 +12,9 @@ import com.kevenwallace.project.dto.CategoryDTO;
 import com.kevenwallace.project.entities.categories;
 import com.kevenwallace.project.repositories.CategoriesRepository;
 
+
+import com.kevenwallace.project.services.exceptions.EntityNotFoundException;
+
 @Service
 public class CategoriesService {
 	
@@ -24,11 +27,11 @@ public class CategoriesService {
 		List<CategoryDTO> ListDto = list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
 		return ListDto;
 	}
-
+ 
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<categories> object = repository.findById(id);
-		categories entity = object.get();
+		categories entity = object.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 		return new CategoryDTO(entity);
 	}
 }
