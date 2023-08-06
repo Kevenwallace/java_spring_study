@@ -1,11 +1,11 @@
 package com.kevenwallace.project.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,9 @@ public class CategoriesService {
 	private CategoriesRepository repository;
 
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll() {
-		List<categories> list = repository.findAll();
-		List<CategoryDTO> ListDto = list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+		Page<categories> list = repository.findAll(pageRequest);
+		Page<CategoryDTO> ListDto = list.map(x -> new CategoryDTO(x));
 		return ListDto;
 	}
 
